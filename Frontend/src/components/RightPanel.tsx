@@ -1,5 +1,5 @@
 import type React from "react"
-import logoPng from "../assets/logo_blanco.png"
+import logoPng from "../assets/logo_blanco.png";
 
 const RightPanel: React.FC = () => {
   return (
