@@ -33,9 +33,6 @@ public class Client {
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
-    @Column(name = "country_code", length = 8)
-    private String countryCode;
-
     @Column(name = "phone_number", length = 32)
     private String phoneNumber;
 

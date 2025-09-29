@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
         name = "administrators",
         uniqueConstraints = {
                 @UniqueConstraint(name = "uq_admins_user_id", columnNames = "user_id"),
-                @UniqueConstraint(name = "uq_admins_code", columnNames = "admin_code")
         }
 )
 @Data
@@ -35,8 +34,14 @@ public class Administrator {
     )
     private User user;
 
-    @Column(name = "admin_code", nullable = false, length = 32)
-    private String adminCode;
+    @Enumerated(EnumType.STRING)
+    @Column(
+            name = "role",
+            nullable = false,
+            columnDefinition = "ENUM('ADMIN','SUPERADMIN') DEFAULT 'ADMIN'"
+    )
+    private RoleAdmin role;
+
 
     // Relación con otro administrador (created_by_admin)
     @ManyToOne(fetch = FetchType.LAZY)

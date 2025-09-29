@@ -1,5 +1,5 @@
 package com.digiticket.domain;
 
-public enum Role {
+public enum RoleUser {
     CLIENT, ADMIN
 }

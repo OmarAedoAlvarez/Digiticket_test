@@ -5,6 +5,7 @@ import com.digiticket.repository.UserRepository;
 import com.digiticket.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -13,11 +14,11 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
-                           BCryptPasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -34,9 +35,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User saveUser(User user) {
-        // Si viene una contraseña no nula y NO parece un hash bcrypt, la encriptamos.
-        if (user.getPassword() != null && !user.getPassword().startsWith("$2a$") &&
-                !user.getPassword().startsWith("$2b$") && !user.getPassword().startsWith("$2y$")) {
+        if (user.getPassword() != null) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
         return userRepository.save(user);
@@ -46,10 +45,8 @@ public class UserServiceImpl implements UserService {
     public boolean validateUser(String email, String rawPassword) {
         Optional<User> userOpt = userRepository.findByEmail(email);
         if (userOpt.isEmpty()) return false;
-
         String encoded = userOpt.get().getPassword();
         if (encoded == null) return false;
-
         return passwordEncoder.matches(rawPassword, encoded);
     }
 }

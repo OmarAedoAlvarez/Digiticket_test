@@ -7,8 +7,8 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate   # en desarrollo: update | en producción real: validate o none
-    show-sql: true       # muestra los queries en consola
+      ddl-auto: validate
+    show-sql: true
     properties:
       hibernate:
         format_sql: true
