@@ -14,3 +14,10 @@ export interface LoginFormState {
   errors: FormErrors
   isLoading: boolean
 }
+
+export interface LoginResponse {
+  token: string
+  id: number
+  role: string
+  name: string
+}
