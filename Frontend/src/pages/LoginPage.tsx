@@ -7,6 +7,7 @@ import PasswordInput from "../components/PasswordInput"
 import Button from "../components/Button"
 import RightPanel from "../components/RightPanel"
 import useLoginForm from "../hooks/useLoginForm"
+import logoPng from "../assets/logo_blanco.png";
 
 const LoginPage: React.FC = () => {
   const { formState, updateField, submitForm } = useLoginForm()
@@ -83,7 +84,7 @@ const LoginPage: React.FC = () => {
         {/* Mobile gradient panel */}
         <div className="lg:hidden bg-superticket-gradient p-8 text-white text-center">
           <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-4">
-            <img src="/src/assets/logo_blanco.jpg" alt="SuperTicket Logo" className="w-12 h-12" />
+            <img src={logoPng} alt="SuperTicket Logo" className="w-12 h-12" />
           </div>
           <h2 className="text-2xl font-bold mb-2">SuperTicket</h2>
           <p className="text-sm opacity-80">2025©Bytecraft. Todos los derechos reservados</p>
