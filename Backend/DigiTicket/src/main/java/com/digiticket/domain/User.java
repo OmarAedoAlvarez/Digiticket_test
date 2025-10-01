@@ -35,13 +35,13 @@ public class User {
     private String email;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "document_type")
+    @Column(name = "document_type", nullable = false)
     private DocumentType documentType;
 
-    @Column(name = "document_number", length = 32)
+    @Column(name = "document_number", length = 32, nullable = false)
     private String documentNumber;
 
-    @Column(length = 255)
+    @Column(length = 255, nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
