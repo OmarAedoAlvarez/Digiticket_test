@@ -27,9 +27,9 @@ const initialState: FormState = {
 
 const docTypes = [
   { value: "", label: "Seleccionar" },
-  { value: "dni", label: "DNI" },
-  { value: "ce", label: "Carné de extranjería" },
-  { value: "pasaporte", label: "Pasaporte" },
+  { value: "DNI", label: "DNI" },
+  { value: "CE", label: "Carné de extranjería" },
+  { value: "PASSPORT", label: "Pasaporte" },
 ];
 
 function FieldError({ msg }: { msg?: string }) {
@@ -71,30 +71,56 @@ export default function RegisterPage() {
     setTouched((t) => ({ ...t, [key]: true }));
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setTouched({
-      firstName: true,
-      lastName: true,
-      docType: true,
-      docNumber: true,
-      birthDate: true,
-      phone: true,
-      email: true,
-      password: true,
-      confirm: true,
+  e.preventDefault();
+  setTouched({
+    firstName: true,
+    lastName: true,
+    docType: true,
+    docNumber: true,
+    birthDate: true,
+    phone: true,
+    email: true,
+    password: true,
+    confirm: true,
+  });
+  if (hasErrors) return;
+
+  setSubmitting(true);
+  try {
+    const response = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        firstName: form.firstName,
+        lastName: form.lastName,
+        email: form.email,
+        password: form.password,
+        documentType: form.docType, 
+        documentNumber: form.docNumber,
+        birthDate: form.birthDate, 
+        phoneNumber: form.phone,
+      }),
     });
-    if (hasErrors) return;
-    setSubmitting(true);
-    try {
-      // 🔐 aquí llamarías a tu API real
-      await new Promise((r) => setTimeout(r, 800));
-      alert("Cuenta creada 🎉");
-      setForm(initialState);
-      setTouched({} as any);
-    } finally {
-      setSubmitting(false);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText || "Error al registrar");
     }
-  };
+
+    const data = await response.json();
+    alert(`Cuenta creada 🎉 Bienvenido ${data.name}`);
+
+    setForm(initialState);
+    setTouched({} as any);
+  } catch (err: any) {
+    alert("Error: " + err.message);
+  } finally {
+    setSubmitting(false);
+  }
+};
+
 
   return (
     <div className="min-h-screen grid lg:grid-cols-2 font-poppins">
