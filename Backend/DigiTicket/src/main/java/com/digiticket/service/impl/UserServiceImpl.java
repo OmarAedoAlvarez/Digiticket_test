@@ -14,14 +14,12 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository,
-                           PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
     }
+
 
     @Override
     public boolean emailExists(String email) {
@@ -34,19 +32,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User saveUser(User user) {
-        if (user.getPassword() != null) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-        }
+    public User save(User user) {
         return userRepository.save(user);
-    }
-
-    @Override
-    public boolean validateUser(String email, String rawPassword) {
-        Optional<User> userOpt = userRepository.findByEmail(email);
-        if (userOpt.isEmpty()) return false;
-        String encoded = userOpt.get().getPassword();
-        if (encoded == null) return false;
-        return passwordEncoder.matches(rawPassword, encoded);
     }
 }
