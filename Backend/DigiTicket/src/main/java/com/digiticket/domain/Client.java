@@ -30,10 +30,10 @@ public class Client {
     )
     private User user;
 
-    @Column(name = "birth_date")
+    @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
-    @Column(name = "phone_number", length = 32)
+    @Column(name = "phone_number", length = 32, nullable = false)
     private String phoneNumber;
 
     @CreationTimestamp
