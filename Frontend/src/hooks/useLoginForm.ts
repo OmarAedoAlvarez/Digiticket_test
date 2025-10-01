@@ -2,6 +2,8 @@
 
 import { useState } from "react"
 import type { LoginFormData, FormErrors, LoginFormState } from "../types"
+import { loginRequest } from "../../lib/utils"
+import type { LoginResponse } from "../types"
 
 const useLoginForm = () => {
   const [formState, setFormState] = useState<LoginFormState>({
@@ -47,29 +49,23 @@ const useLoginForm = () => {
   }
 
   const submitForm = async (): Promise<void> => {
-    if (!validateForm()) return
+  if (!validateForm()) return
+  setFormState((prev) => ({ ...prev, isLoading: true, errors: {} }))
 
-    setFormState((prev) => ({ ...prev, isLoading: true, errors: {} }))
-
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 800))
-
-      // Simulate login success/failure
-      if (formState.data.email === "test@test.com" && formState.data.password === "password123") {
-        console.log("Login successful!")
-      } else {
-        throw new Error("Credenciales incorrectas")
-      }
-    } catch (error) {
-      setFormState((prev) => ({
-        ...prev,
-        errors: { general: error instanceof Error ? error.message : "Error de conexión" },
-      }))
-    } finally {
-      setFormState((prev) => ({ ...prev, isLoading: false }))
-    }
+  try {
+    const res = (await loginRequest(formState.data.email, formState.data.password)) as LoginResponse
+    localStorage.setItem("token", res.token)
+    localStorage.setItem("user", JSON.stringify({ id: res.id, role: res.role, name: res.name }))
+    console.log("Login OK:", res)
+  } catch (error: any) {
+    setFormState((prev) => ({
+      ...prev,
+      errors: { general: error?.message || "Credenciales incorrectas" },
+    }))
+  } finally {
+    setFormState((prev) => ({ ...prev, isLoading: false }))
   }
+}
 
   return {
     formState,

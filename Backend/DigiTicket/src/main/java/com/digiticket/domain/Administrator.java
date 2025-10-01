@@ -42,15 +42,6 @@ public class Administrator {
     )
     private RoleAdmin role;
 
-
-    // Relación con otro administrador (created_by_admin)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "created_by_admin",
-            foreignKey = @ForeignKey(name = "fk_admins_created_by")
-    )
-    private Administrator createdByAdmin;
-
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
