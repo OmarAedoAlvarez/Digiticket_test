@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  backend:
+    image: ${DOCKERHUB_USERNAME}/digiticket-backend:latest
+    container_name: digiticket-backend
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    networks:
+      - digiticket-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", 
+             "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  frontend:
+    image: ${DOCKERHUB_USERNAME}/digiticket-frontend:latest
+    container_name: digiticket-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - digiticket-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  digiticket-network:
+    driver: bridge
